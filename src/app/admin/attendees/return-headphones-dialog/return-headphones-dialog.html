@@ -1,0 +1,49 @@
+<div class="p-fluid" [formGroup]="form">
+
+  <div class="field">
+    <label>ID</label>
+    <input pInputText formControlName="headphonesId" readonly />
+  </div>
+
+  <div class="field">
+    <label>Status</label>
+
+    <div class="flex gap-2 mt-2">
+
+      @for (s of statuses; track s) {
+        <button
+          pButton
+          type="button"
+          [label]="s"
+          (click)="setStatus(s)"
+          [ngClass]="{
+      'p-button': form.controls.status.value === s,
+      'p-button-outlined': form.controls.status.value !== s
+    }"
+        ></button>
+      }
+
+    </div>
+  </div>
+
+  <div class="flex justify-content-end gap-2 mt-4">
+
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      class="p-button-text"
+      (click)="cancel()"
+    ></button>
+
+    <button
+      pButton
+      type="button"
+      label="Return"
+      [disabled]="form.invalid"
+      (click)="save()"
+    ></button>
+
+  </div>
+
+</div>

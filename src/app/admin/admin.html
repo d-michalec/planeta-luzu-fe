@@ -1,0 +1,43 @@
+<div class="app-layout">
+
+  <nav class="navbar">
+    <div class="navbar-container">
+
+      <a class="navbar-brand" routerLink="/">
+        <span class="brand-icon">
+          <i class="pi pi-headphones"></i>
+        </span>
+        <span class="brand-text">Panel Wiki</span>
+      </a>
+
+      <button
+        type="button"
+        class="mobile-menu-button"
+        (click)="mobileMenuOpen.update(open => !open)"
+        aria-label="Toggle menu"
+      >
+        <i class="pi" [ngClass]="mobileMenuOpen() ? 'pi-times' : 'pi-bars'"></i>
+      </button>
+
+      <ul class="navbar-links" [class.open]="mobileMenuOpen()">
+        <li *ngFor="let link of navLinks">
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="active"
+            class="nav-link"
+            (click)="mobileMenuOpen.set(false)"
+          >
+            <i [class]="link.icon"></i>
+            <span>{{ link.label }}</span>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

@@ -1,0 +1,63 @@
+<form class="headphones-form" [formGroup]="form" (ngSubmit)="save()">
+
+  <div class="form-field">
+    <label for="headphonesId">Headphones ID</label>
+
+    <input
+      id="headphonesId"
+      pInputText
+      type="number"
+      formControlName="headphonesId"
+      placeholder="Enter headphones ID"
+    />
+
+    <small class="field-error" *ngIf="form.controls.headphonesId.invalid && form.controls.headphonesId.touched">
+      Headphones ID is required.
+    </small>
+  </div>
+
+  <div class="form-field">
+    <label>Status</label>
+
+    <div class="status-options">
+
+      @for (s of statuses; track s) {
+        <button
+          pButton
+          type="button"
+          [label]="s"
+          (click)="setStatus(s)"
+          [ngClass]="{
+            'p-button': form.controls.status.value === s,
+            'p-button-outlined': form.controls.status.value !== s
+          }"
+        ></button>
+      }
+
+    </div>
+
+    <small class="field-error" *ngIf="form.controls.status.invalid && form.controls.status.touched">
+      Status is required.
+    </small>
+  </div>
+
+  <div class="dialog-actions">
+
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      class="p-button-text"
+      (click)="cancel()"
+    ></button>
+
+    <button
+      pButton
+      type="submit"
+      label="Save"
+      [disabled]="form.invalid"
+    ></button>
+
+  </div>
+
+</form>

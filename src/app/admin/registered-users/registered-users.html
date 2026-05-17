@@ -1,0 +1,74 @@
+<!-- FILTERS -->
+<div class="flex flex-column md:flex-row gap-2 mb-3">
+
+  <input pInputText placeholder="First name"
+         [value]="filters().firstName"
+         (input)="onFilterChange('firstName', $any($event.target).value)" />
+
+  <input pInputText placeholder="Last name"
+         [value]="filters().lastName"
+         (input)="onFilterChange('lastName', $any($event.target).value)" />
+
+  <input pInputText placeholder="Email"
+         [value]="filters().email"
+         (input)="onFilterChange('email', $any($event.target).value)" />
+
+  <button pButton label="Reset" icon="pi pi-refresh"
+          class="p-button-secondary"
+          (click)="resetFilters()"></button>
+
+</div>
+
+<!-- TABLE -->
+<p-table
+  [value]="filteredUsers()"
+  stripedRows
+  [rows]="10"
+  [scrollable]="true"
+>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Paid</th>
+      <th>Expires At</th>
+      <th style="width: 4rem;"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-u>
+    <tr>
+
+      <td>{{ u.firstName }}</td>
+      <td>{{ u.lastName }}</td>
+      <td>{{ u.email }}</td>
+
+      <td>
+        <span [ngClass]="u.paid ? 'text-green-600' : 'text-red-500'">
+          {{ u.paid ? 'PAID' : 'NOT PAID' }}
+        </span>
+      </td>
+
+      <td>
+        {{ u.expiresAt | date:'dd.MM.yyyy HH:mm' }}
+      </td>
+
+      <td class="text-right">
+
+        <p-menu #menu [popup]="true" appendTo="body" [model]="menuItems"></p-menu>
+
+        <button
+          pButton
+          icon="pi pi-ellipsis-v"
+          class="p-button-text p-button-sm"
+          (click)="openMenu(u, menu, $event); $event.stopPropagation()">
+        </button>
+
+      </td>
+
+    </tr>
+  </ng-template>
+
+</p-table>

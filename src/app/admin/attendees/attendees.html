@@ -1,0 +1,160 @@
+<section class="attendees-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Zwrot słuchawek</h1>
+      <p>Wyszukaj uczestnika i oznacz zwrot przypisanych słuchawek.</p>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-card">
+
+    <input
+      pInputText
+      placeholder="First name"
+      [value]="filters().firstName"
+      (input)="onFilterChange('firstName', $any($event.target).value)"
+    />
+
+    <input
+      pInputText
+      placeholder="Last name"
+      [value]="filters().lastName"
+      (input)="onFilterChange('lastName', $any($event.target).value)"
+    />
+
+    <input
+      pInputText
+      placeholder="Headphones ID"
+      [value]="filters().headphonesId"
+      (input)="onFilterChange('headphonesId', $any($event.target).value)"
+    />
+
+    <button
+      pButton
+      label="Reset"
+      icon="pi pi-refresh"
+      class="p-button-secondary"
+      (click)="resetFilters()"
+    ></button>
+
+  </div>
+
+  <!-- DESKTOP TABLE -->
+  <div class="desktop-table">
+    <p-table
+      [value]="filtered()"
+      stripedRows
+      [rows]="10"
+      [scrollable]="true"
+      scrollDirection="horizontal"
+      responsiveLayout="scroll"
+    >
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Headphones ID</th>
+          <th>Status</th>
+          <th style="width: 4rem; text-align: right;"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-a>
+        <tr>
+
+          <td>{{ a.firstName }}</td>
+
+          <td>{{ a.lastName }}</td>
+
+          <td>{{ a.headphonesId }}</td>
+
+          <td>
+            <span class="status" [ngClass]="a.assignmentStatus.toLowerCase()">
+               {{ a.assignmentStatus || 'NIEZNANY' }}
+            </span>
+          </td>
+
+          <td style="white-space: nowrap; text-align: right;">
+
+            <p-menu
+              #menu
+              [popup]="true"
+              [model]="menuItems"
+              appendTo="body"
+            ></p-menu>
+
+            <button
+              pButton
+              icon="pi pi-ellipsis-v"
+              class="p-button-text p-button-sm"
+              (click)="onMenuClick(a, menu, $event)"
+            ></button>
+
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              Brak uczestników dla wybranych filtrów.
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <!-- MOBILE CARDS -->
+  <div class="mobile-list">
+
+    <article class="attendee-card" *ngFor="let a of filtered()">
+
+      <div class="card-header">
+
+        <div class="person">
+          <strong>{{ a.firstName }} {{ a.lastName }}</strong>
+          <span>Headphones ID: {{ a.headphonesId }}</span>
+        </div>
+
+        <div class="card-actions">
+
+          <p-menu
+            #mobileMenu
+            [popup]="true"
+            [model]="menuItems"
+            appendTo="body"
+          ></p-menu>
+
+          <button
+            pButton
+            icon="pi pi-ellipsis-v"
+            class="p-button-text p-button-sm"
+            (click)="onMenuClick(a, mobileMenu, $event)"
+          ></button>
+
+        </div>
+
+      </div>
+
+      <div class="card-footer">
+        <span class="status" [ngClass]="a.assignmentStatus.toLowerCase()">
+          {{ a.assignmentStatus }}
+        </span>
+      </div>
+
+    </article>
+
+    <div class="empty-state mobile-empty" *ngIf="filtered().length === 0">
+      Brak uczestników dla wybranych filtrów.
+    </div>
+
+  </div>
+
+</section>

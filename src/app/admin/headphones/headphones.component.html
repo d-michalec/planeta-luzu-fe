@@ -1,0 +1,125 @@
+<section class="headphones-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Słuchawki</h1>
+      <p>Zarządzaj słuchawkami, ich statusem oraz dostępnością.</p>
+    </div>
+
+    <button
+      pButton
+      icon="pi pi-plus"
+      label="Nowe słuchawki"
+      class="create-button"
+      (click)="openCreate()"
+    ></button>
+  </div>
+
+  <!-- DESKTOP TABLE -->
+  <div class="desktop-table">
+    <p-table
+      [value]="headphones()"
+      stripedRows
+      [rows]="10"
+      [scrollable]="true"
+      scrollDirection="horizontal"
+      responsiveLayout="scroll"
+    >
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th style="width: 4rem; text-align: right;"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-h>
+        <tr>
+
+          <td>{{ h.headphonesId }}</td>
+
+          <td>
+            <span class="status" [ngClass]="getStatusClass(h.status)">
+              {{ h.status || 'UNKNOWN' }}
+            </span>
+          </td>
+
+          <td style="white-space: nowrap; text-align: right;">
+
+            <p-menu
+              #menu
+              [popup]="true"
+              [model]="menuItems"
+              appendTo="body"
+            ></p-menu>
+
+            <button
+              pButton
+              icon="pi pi-ellipsis-v"
+              class="p-button-text p-button-sm"
+              (click)="onMenuClick(h, menu, $event)"
+            ></button>
+
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3">
+            <div class="empty-state">
+              Brak słuchawek.
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <!-- MOBILE CARDS -->
+  <div class="mobile-list">
+
+    <article class="headphones-card" *ngFor="let h of headphones()">
+
+      <div class="card-header">
+
+        <div class="headphones-info">
+          <strong>Headphones ID: {{ h.headphonesId }}</strong>
+
+          <span class="status" [ngClass]="getStatusClass(h.status)">
+            {{ h.status || 'UNKNOWN' }}
+          </span>
+        </div>
+
+        <div class="card-actions">
+
+          <p-menu
+            #mobileMenu
+            [popup]="true"
+            [model]="menuItems"
+            appendTo="body"
+          ></p-menu>
+
+          <button
+            pButton
+            icon="pi pi-ellipsis-v"
+            class="p-button-text p-button-sm"
+            (click)="onMenuClick(h, mobileMenu, $event)"
+          ></button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+    <div class="empty-state mobile-empty" *ngIf="headphones().length === 0">
+      Brak słuchawek.
+    </div>
+
+  </div>
+
+</section>

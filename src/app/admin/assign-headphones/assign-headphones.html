@@ -1,0 +1,53 @@
+<div class="scanner-debug">
+
+  <video
+    #video
+    class="camera"
+    [class.hidden]="scannedTicket"
+    autoplay
+    muted
+    playsinline
+    webkit-playsinline
+  ></video>
+
+
+  <button
+    type="button"
+    (click)="startScanner()"
+    style="
+      margin-top: 10px;
+      padding: 10px;
+      background: red;
+      color: white;
+      width: 100%;
+    "
+  >
+    FORCE START CAMERA
+  </button>
+
+  <!-- 🔥 STATUS -->
+  <div style="margin-top: 10px;">
+    <p>Active: {{ isActive }}</p>
+    <p>Error: {{ error || 'none' }}</p>
+    <p>Ticket: {{ scannedTicket || 'none' }}</p>
+  </div>
+
+  <!-- 🔥 POPUP -->
+  <div *ngIf="scannedTicket"
+       style="margin-top: 15px; padding: 10px; border: 1px solid #ccc;">
+
+    <h3>QR OK</h3>
+    <p>{{ scannedTicket }}</p>
+
+    <input
+      type="number"
+      [(ngModel)]="headphonesId"
+      placeholder="Headphones ID"
+    />
+
+    <button (click)="assign()">ASSIGN</button>
+    <button (click)="reset()">RESET</button>
+
+  </div>
+
+</div>

@@ -1,0 +1,47 @@
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RESET */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* GLOBAL VARIABLES */
+:root {
+  --nav-h: 70px;
+  --accent: #6366f1;
+  --bg: #ffffff;
+  --border: #e5e7eb;
+  --text: #111827;
+  --muted: #6b7280;
+}
+
+app-assign-headphones {
+  position: relative;
+  z-index: 1;
+}
+
+/* kamera / scanner */
+.scanner,
+.scanner-debug {
+  position: relative;
+  z-index: 10;
+}
+
+/* PrimeNG overlay (menu, dialog, popup) */
+.p-dialog,
+.p-overlaypanel,
+.p-menu {
+  z-index: 3000 !important;
+}
+
+/* backdrop dialog */
+.p-dialog-mask {
+  z-index: 2999 !important;
+}
