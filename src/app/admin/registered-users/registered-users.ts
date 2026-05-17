@@ -5,7 +5,7 @@ import { RegisteredUsersApiService } from '../service/registered-users.api.servi
 import { RegisteredUsersDto, Filters, RegisteredUsersViewModel } from '../shared/model/registered-users.model';
 
 import { MenuItem } from 'primeng/api';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { Menu } from 'primeng/menu';
 import { TableModule } from 'primeng/table';
 import { InputText } from 'primeng/inputtext';
@@ -17,6 +17,8 @@ import { ButtonDirective } from 'primeng/button';
   styleUrl: './registered-users.css',
   imports: [
     NgClass,
+    NgForOf,
+    NgIf,
     DatePipe,
     Menu,
     TableModule,
@@ -104,6 +106,14 @@ export class RegisteredUsers {
     this.api.confirmPayment(user.reservationId).subscribe(() => {
       this.loadUsers();
     });
+  }
+
+  getPaymentStatusLabel(user: RegisteredUsersViewModel): string {
+    return user.paid ? 'PAID' : 'NOT PAID';
+  }
+
+  getPaymentStatusClass(user: RegisteredUsersViewModel): string {
+    return user.paid ? 'paid' : 'unpaid';
   }
 
   private toViewModel(u: RegisteredUsersDto): RegisteredUsersViewModel {

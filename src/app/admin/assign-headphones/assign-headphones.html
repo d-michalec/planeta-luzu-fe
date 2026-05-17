@@ -1,53 +1,187 @@
-<div class="scanner-debug">
+<section class="assign-headphones-page">
 
-  <video
-    #video
-    class="camera"
-    [class.hidden]="scannedTicket"
-    autoplay
-    muted
-    playsinline
-    webkit-playsinline
-  ></video>
-
-
-  <button
-    type="button"
-    (click)="startScanner()"
-    style="
-      margin-top: 10px;
-      padding: 10px;
-      background: red;
-      color: white;
-      width: 100%;
-    "
-  >
-    FORCE START CAMERA
-  </button>
-
-  <!-- 🔥 STATUS -->
-  <div style="margin-top: 10px;">
-    <p>Active: {{ isActive }}</p>
-    <p>Error: {{ error || 'none' }}</p>
-    <p>Ticket: {{ scannedTicket || 'none' }}</p>
+  <div class="page-header">
+    <div>
+      <h1>Przypisanie słuchawek</h1>
+      <p>Zeskanuj bilet kamerą albo przypisz słuchawki ręcznie po adresie email.</p>
+    </div>
   </div>
 
-  <!-- 🔥 POPUP -->
-  <div *ngIf="scannedTicket"
-       style="margin-top: 15px; padding: 10px; border: 1px solid #ccc;">
+  <div class="mode-switch" role="tablist" aria-label="Tryb przypisania">
+    <button
+      type="button"
+      class="mode-button"
+      [class.active]="mode === 'camera'"
+      (click)="setMode('camera')"
+    >
+      <i class="pi pi-camera"></i>
+      Kamera
+    </button>
 
-    <h3>QR OK</h3>
-    <p>{{ scannedTicket }}</p>
+    <button
+      type="button"
+      class="mode-button"
+      [class.active]="mode === 'manual'"
+      (click)="setMode('manual')"
+    >
+      <i class="pi pi-envelope"></i>
+      Ręcznie
+    </button>
+  </div>
 
-    <input
-      type="number"
-      [(ngModel)]="headphonesId"
-      placeholder="Headphones ID"
-    />
+  <div class="message success" *ngIf="success">
+    <i class="pi pi-check-circle"></i>
+    <span>{{ success }}</span>
+  </div>
 
-    <button (click)="assign()">ASSIGN</button>
-    <button (click)="reset()">RESET</button>
+  <div class="message error" *ngIf="error">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ error }}</span>
+  </div>
+
+  <div class="assign-layout">
+
+    <article class="assign-panel scanner-panel" *ngIf="mode === 'camera'">
+      <div class="panel-header">
+        <div>
+          <h2>Kamera</h2>
+          <p *ngIf="!scannedTicket">Ustaw kod QR biletu w ramce skanera.</p>
+          <p *ngIf="scannedTicket">Bilet odczytany. Podaj ID słuchawek.</p>
+        </div>
+
+        <span class="status" [ngClass]="isActive ? 'active' : scannedTicket ? 'ready' : 'inactive'">
+          {{ isStartingCamera ? 'STARTING' : isActive ? 'SCANNING' : scannedTicket ? 'QR OK' : 'STOPPED' }}
+        </span>
+      </div>
+
+      <div class="camera-workspace">
+        <div class="camera-frame" [class.has-result]="scannedTicket">
+          <video
+            #video
+            class="camera"
+            [class.hidden]="scannedTicket"
+            autoplay
+            muted
+            playsinline
+            webkit-playsinline
+          ></video>
+
+          <div class="scan-overlay" *ngIf="!scannedTicket">
+            <span></span>
+          </div>
+
+          <div class="camera-start" *ngIf="!scannedTicket && !isActive && !isStartingCamera">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-camera"
+              label="Włącz kamerę"
+              (click)="startScanner(true, video)"
+            ></button>
+          </div>
+
+          <div class="scan-result" *ngIf="scannedTicket">
+            <i class="pi pi-qrcode"></i>
+            <strong>QR OK</strong>
+            <span>{{ scannedTicket }}</span>
+          </div>
+        </div>
+
+        <div class="assign-form camera-form">
+          <label for="cameraHeadphonesId">Headphones ID</label>
+          <input
+            id="cameraHeadphonesId"
+            pInputText
+            type="number"
+            min="1"
+            [(ngModel)]="headphonesId"
+            placeholder="Headphones ID"
+          />
+
+          <div class="ticket-preview">
+            <span>Ticket</span>
+            <strong>{{ scannedTicket || (cameraNeedsInteraction ? 'Dotknij Włącz kamerę' : 'Czeka na skan') }}</strong>
+          </div>
+
+          <div class="actions">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-check"
+              label="Przypisz"
+              [disabled]="!scannedTicket || !headphonesId || isAssigning"
+              (click)="assignScanned()"
+            ></button>
+
+            <button
+              pButton
+              type="button"
+              icon="pi pi-refresh"
+              label="Skanuj ponownie"
+              class="p-button-secondary"
+              (click)="restartScanner()"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="assign-panel manual-panel" *ngIf="mode === 'manual'">
+      <div class="panel-header">
+        <div>
+          <h2>Ręczne przypisanie</h2>
+          <p>Wpisz email uczestnika i ID słuchawek do przypisania.</p>
+        </div>
+
+        <span class="status manual">
+          MANUAL
+        </span>
+      </div>
+
+      <form class="assign-form" (ngSubmit)="assignManual()">
+        <label for="manualEmail">Email</label>
+        <input
+          id="manualEmail"
+          pInputText
+          type="email"
+          name="manualEmail"
+          [(ngModel)]="manualEmail"
+          placeholder="Email"
+          autocomplete="email"
+        />
+
+        <label for="manualHeadphonesId">Headphones ID</label>
+        <input
+          id="manualHeadphonesId"
+          pInputText
+          type="number"
+          min="1"
+          name="manualHeadphonesId"
+          [(ngModel)]="manualHeadphonesId"
+          placeholder="Headphones ID"
+        />
+
+        <div class="actions">
+          <button
+            pButton
+            type="submit"
+            icon="pi pi-check"
+            label="Przypisz ręcznie"
+            [disabled]="!manualEmail.trim() || !manualHeadphonesId || isAssigning"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            icon="pi pi-times"
+            label="Wyczyść"
+            class="p-button-secondary"
+            (click)="resetManualForm()"
+          ></button>
+        </div>
+      </form>
+    </article>
 
   </div>
 
-</div>
+</section>

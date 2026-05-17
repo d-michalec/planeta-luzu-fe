@@ -1,74 +1,164 @@
-<!-- FILTERS -->
-<div class="flex flex-column md:flex-row gap-2 mb-3">
+<section class="registered-users-page">
 
-  <input pInputText placeholder="First name"
-         [value]="filters().firstName"
-         (input)="onFilterChange('firstName', $any($event.target).value)" />
+  <div class="page-header">
+    <div>
+      <h1>Rejestracje</h1>
+      <p>Przeglądaj zapisanych uczestników i potwierdzaj opłacone rezerwacje.</p>
+    </div>
+  </div>
 
-  <input pInputText placeholder="Last name"
-         [value]="filters().lastName"
-         (input)="onFilterChange('lastName', $any($event.target).value)" />
+  <!-- FILTERS -->
+  <div class="filters-card">
 
-  <input pInputText placeholder="Email"
-         [value]="filters().email"
-         (input)="onFilterChange('email', $any($event.target).value)" />
+    <input
+      pInputText
+      placeholder="First name"
+      [value]="filters().firstName"
+      (input)="onFilterChange('firstName', $any($event.target).value)"
+    />
 
-  <button pButton label="Reset" icon="pi pi-refresh"
-          class="p-button-secondary"
-          (click)="resetFilters()"></button>
+    <input
+      pInputText
+      placeholder="Last name"
+      [value]="filters().lastName"
+      (input)="onFilterChange('lastName', $any($event.target).value)"
+    />
 
-</div>
+    <input
+      pInputText
+      placeholder="Email"
+      [value]="filters().email"
+      (input)="onFilterChange('email', $any($event.target).value)"
+    />
 
-<!-- TABLE -->
-<p-table
-  [value]="filteredUsers()"
-  stripedRows
-  [rows]="10"
-  [scrollable]="true"
->
+    <button
+      pButton
+      label="Reset"
+      icon="pi pi-refresh"
+      class="p-button-secondary"
+      (click)="resetFilters()"
+    ></button>
 
-  <ng-template pTemplate="header">
-    <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
-      <th>Paid</th>
-      <th>Expires At</th>
-      <th style="width: 4rem;"></th>
-    </tr>
-  </ng-template>
+  </div>
 
-  <ng-template pTemplate="body" let-u>
-    <tr>
+  <!-- DESKTOP TABLE -->
+  <div class="desktop-table">
+    <p-table
+      [value]="filteredUsers()"
+      stripedRows
+      [rows]="10"
+      [scrollable]="true"
+      scrollDirection="horizontal"
+      responsiveLayout="scroll"
+    >
 
-      <td>{{ u.firstName }}</td>
-      <td>{{ u.lastName }}</td>
-      <td>{{ u.email }}</td>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Paid</th>
+          <th>Expires At</th>
+          <th style="width: 4rem; text-align: right;"></th>
+        </tr>
+      </ng-template>
 
-      <td>
-        <span [ngClass]="u.paid ? 'text-green-600' : 'text-red-500'">
-          {{ u.paid ? 'PAID' : 'NOT PAID' }}
+      <ng-template pTemplate="body" let-u>
+        <tr>
+
+          <td>{{ u.firstName }}</td>
+          <td>{{ u.lastName }}</td>
+          <td>{{ u.email }}</td>
+
+          <td>
+            <span class="status" [ngClass]="getPaymentStatusClass(u)">
+              {{ getPaymentStatusLabel(u) }}
+            </span>
+          </td>
+
+          <td>
+            {{ u.expiresAt | date:'dd.MM.yyyy HH:mm' }}
+          </td>
+
+          <td style="white-space: nowrap; text-align: right;">
+
+            <p-menu
+              #menu
+              [popup]="true"
+              appendTo="body"
+              [model]="menuItems"
+            ></p-menu>
+
+            <button
+              pButton
+              icon="pi pi-ellipsis-v"
+              class="p-button-text p-button-sm"
+              (click)="openMenu(u, menu, $event); $event.stopPropagation()"
+            ></button>
+
+          </td>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              Brak rejestracji dla wybranych filtrów.
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <!-- MOBILE CARDS -->
+  <div class="mobile-list">
+
+    <article class="registered-user-card" *ngFor="let u of filteredUsers()">
+
+      <div class="card-header">
+
+        <div class="person">
+          <strong>{{ u.firstName }} {{ u.lastName }}</strong>
+          <span>{{ u.email }}</span>
+          <span>Expires At: {{ u.expiresAt | date:'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+
+        <div class="card-actions">
+
+          <p-menu
+            #mobileMenu
+            [popup]="true"
+            [model]="menuItems"
+            appendTo="body"
+          ></p-menu>
+
+          <button
+            pButton
+            icon="pi pi-ellipsis-v"
+            class="p-button-text p-button-sm"
+            (click)="openMenu(u, mobileMenu, $event); $event.stopPropagation()"
+          ></button>
+
+        </div>
+
+      </div>
+
+      <div class="card-footer">
+        <span class="status" [ngClass]="getPaymentStatusClass(u)">
+          {{ getPaymentStatusLabel(u) }}
         </span>
-      </td>
+      </div>
 
-      <td>
-        {{ u.expiresAt | date:'dd.MM.yyyy HH:mm' }}
-      </td>
+    </article>
 
-      <td class="text-right">
+    <div class="empty-state mobile-empty" *ngIf="filteredUsers().length === 0">
+      Brak rejestracji dla wybranych filtrów.
+    </div>
 
-        <p-menu #menu [popup]="true" appendTo="body" [model]="menuItems"></p-menu>
+  </div>
 
-        <button
-          pButton
-          icon="pi pi-ellipsis-v"
-          class="p-button-text p-button-sm"
-          (click)="openMenu(u, menu, $event); $event.stopPropagation()">
-        </button>
-
-      </td>
-
-    </tr>
-  </ng-template>
-
-</p-table>
+</section>
