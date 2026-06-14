@@ -5,6 +5,7 @@
   overflow-x: hidden;
 }
 
+.event-section,
 .intro-band,
 .feature-grid,
 .gallery-section {
@@ -149,6 +150,49 @@ h1 {
   margin-top: 26px;
 }
 
+.event-section {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.15fr) minmax(150px, auto);
+  align-items: center;
+  gap: 22px;
+  margin-top: 28px;
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)),
+    rgba(18, 0, 18, 0.62);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  scroll-margin-top: 98px;
+}
+
+.mobile-event-heading {
+  min-width: 0;
+}
+
+.mobile-event-heading h2 {
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 0.98;
+}
+
+.mobile-event-countdown {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.mobile-event-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 8px;
+  color: #140014;
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .event-name,
 .countdown-grid {
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -160,7 +204,7 @@ h1 {
 .event-name {
   display: grid;
   align-content: center;
-  min-width: 220px;
+  min-width: 0;
   padding: 14px 16px;
   border-radius: 8px;
 }
@@ -178,11 +222,13 @@ h1 {
   color: #ffffff;
   font-size: 1.05rem;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .countdown-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(68px, 1fr));
+  grid-template-columns: repeat(4, minmax(56px, 1fr));
+  min-width: 0;
   flex: 1;
   border-radius: 8px;
   overflow: hidden;
@@ -193,7 +239,8 @@ h1 {
   place-items: center;
   gap: 2px;
   min-height: 76px;
-  padding: 10px;
+  min-width: 0;
+  padding: 10px 6px;
 }
 
 .countdown-grid div + div {
@@ -202,7 +249,7 @@ h1 {
 
 .countdown-grid strong {
   color: #ff00c8;
-  font-size: 1.8rem;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
   line-height: 1;
 }
 
@@ -254,9 +301,29 @@ h1 {
   background: #ff00c8;
 }
 
+.mobile-event-jump {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  margin: auto auto 14px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  color: #ffffff;
+  background: rgba(18, 0, 18, 0.36);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 900;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
 .intro-band {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
   gap: 36px;
   padding: 72px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
@@ -280,8 +347,8 @@ h2 {
   display: flex;
   min-height: 250px;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 26px;
+  justify-content: flex-start;
+  gap: 28px;
   overflow: hidden;
   padding: 26px;
   border-radius: 8px;
@@ -326,6 +393,11 @@ h2 {
   z-index: 1;
 }
 
+.feature-card > div {
+  display: grid;
+  gap: 12px;
+}
+
 .feature-icon {
   display: inline-grid;
   width: 54px;
@@ -356,9 +428,13 @@ h2 {
 }
 
 .feature-grid h3 {
-  margin: 0 0 12px;
+  margin: 0;
   font-size: clamp(1.28rem, 2vw, 1.75rem);
   line-height: 1.08;
+}
+
+.feature-grid p {
+  margin: 0;
 }
 
 .gallery-section {
@@ -389,6 +465,15 @@ h2 {
   .feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .event-section {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .mobile-event-button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 860px) {
@@ -399,38 +484,55 @@ h2 {
 
   .hero {
     min-height: calc(100vh - 78px);
+    min-height: calc(100svh - 78px);
   }
 
   .hero-content {
     min-height: calc(100vh - 78px);
-    padding: 56px 0 20px;
+    min-height: calc(100svh - 78px);
+    padding: 36px 0 16px;
   }
 
   .hero-carousel img {
-    object-position: center top !important;
+    object-position: center 22% !important;
+  }
+
+  .hero-carousel img.hide-on-mobile,
+  .slide-dots button.hide-on-mobile {
+    display: none;
   }
 
   .hero-shade {
     background:
-      linear-gradient(0deg, rgba(18, 0, 18, 0.8) 0%, rgba(18, 0, 18, 0.38) 55%, rgba(18, 0, 18, 0.2) 100%),
-      linear-gradient(90deg, rgba(18, 0, 18, 0.72) 0%, rgba(18, 0, 18, 0.22) 100%);
+      linear-gradient(0deg, rgba(18, 0, 18, 0.82) 0%, rgba(18, 0, 18, 0.3) 44%, rgba(18, 0, 18, 0.05) 100%),
+      linear-gradient(90deg, rgba(18, 0, 18, 0.5) 0%, rgba(18, 0, 18, 0.08) 100%);
+  }
+
+  .hero-copy {
+    max-width: 520px;
   }
 
   h1 {
-    font-size: clamp(3.4rem, 18vw, 5.9rem);
+    margin-bottom: 12px;
+    font-size: clamp(2.8rem, 14vw, 4.7rem);
   }
 
   .hero-actions a {
-    flex: 1 1 160px;
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 0 16px;
   }
 
   .event-countdown {
     flex-direction: column;
     gap: 10px;
+    width: min(100%, 420px);
+    margin-top: 14px;
   }
 
   .event-name {
     min-width: 0;
+    padding: 12px 14px;
   }
 
   .countdown-grid {
@@ -438,12 +540,19 @@ h2 {
   }
 
   .countdown-grid div {
-    min-height: 66px;
+    min-height: 58px;
     padding: 8px 4px;
   }
 
   .countdown-grid strong {
-    font-size: 1.35rem;
+    font-size: 1.22rem;
+  }
+
+  .mobile-event-jump {
+    min-height: 34px;
+    margin-bottom: 12px;
+    padding: 0 14px;
+    font-size: 0.82rem;
   }
 
   .carousel-controls {
@@ -463,6 +572,45 @@ h2 {
 
   .slide-dots button {
     width: 26px;
+  }
+
+  .intro-band {
+    padding: 42px 0 52px;
+  }
+
+  .event-section {
+    width: min(100% - 32px, 560px);
+    margin: 22px auto 0;
+    padding: 22px;
+    scroll-margin-top: 86px;
+  }
+
+  .mobile-event-heading {
+    margin-bottom: 16px;
+  }
+
+  .mobile-event-heading h2 {
+    font-size: clamp(1.9rem, 9vw, 3.2rem);
+    line-height: 0.98;
+  }
+
+  .mobile-event-countdown {
+    display: flex;
+    width: 100%;
+    margin: 0;
+  }
+
+  .mobile-event-button {
+    display: inline-flex;
+    width: 100%;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    border-radius: 8px;
+    color: #140014;
+    font-weight: 900;
+    text-decoration: none;
   }
 
   .photo-grid {

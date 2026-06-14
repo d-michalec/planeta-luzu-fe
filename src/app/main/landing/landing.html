@@ -8,6 +8,7 @@
           [src]="slide.image"
           [alt]="slide.alt"
           [class.is-active]="index === activeSlideIndex"
+          [class.hide-on-mobile]="slide.hideOnMobile"
           [style.object-position]="slide.position"
         />
       }
@@ -19,39 +20,20 @@
       <div class="hero-copy">
         <p class="eyebrow">Silent Disco Planeta Luzu</p>
         <h1>Planeta Luzu</h1>
-        @if (eventCountdown$ | async; as state) {
-          @if (state.event) {
-            <div class="event-countdown" aria-label="Odliczanie do wydarzenia">
-              <div class="event-name">
-                <span>Najbliższy event</span>
-                <strong>{{ state.event.name }}</strong>
-              </div>
-
-              <div class="countdown-grid">
-                <div>
-                  <strong>{{ state.countdown.days }}</strong>
-                  <span>dni</span>
-                </div>
-                <div>
-                  <strong>{{ state.countdown.hours }}</strong>
-                  <span>godz.</span>
-                </div>
-                <div>
-                  <strong>{{ state.countdown.minutes }}</strong>
-                  <span>min</span>
-                </div>
-                <div>
-                  <strong>{{ state.countdown.seconds }}</strong>
-                  <span>sek</span>
-                </div>
-              </div>
-            </div>
-          }
-        }
         <div class="hero-actions">
           <a routerLink="/registration" class="primary-button">Rejestracja</a>
         </div>
       </div>
+
+      <button
+        type="button"
+        class="mobile-event-jump"
+        aria-label="Przewiń do najbliższego eventu"
+        (click)="scrollToMobileEvent()"
+      >
+        <span>Najbliższy event</span>
+        <span class="pi pi-angle-down" aria-hidden="true"></span>
+      </button>
 
       <div class="carousel-controls" aria-label="Sterowanie karuzelą">
         <button type="button" class="arrow-button" aria-label="Poprzednie zdjęcie" (click)="previousSlide()">
@@ -63,6 +45,7 @@
             <button
               type="button"
               [class.is-active]="index === activeSlideIndex"
+              [class.hide-on-mobile]="slide.hideOnMobile"
               [attr.aria-label]="'Pokaż zdjęcie ' + (index + 1)"
               [attr.aria-current]="index === activeSlideIndex ? 'true' : null"
               (click)="setSlide(index)"
@@ -77,15 +60,55 @@
     </div>
   </section>
 
+  <section class="event-section" id="mobile-event" aria-label="Najbliższy event">
+    @if (eventCountdown$ | async; as state) {
+      @if (state.event) {
+        <div class="mobile-event-heading">
+          <p class="eyebrow">Najbliższy event</p>
+          <h2>{{ state.event.name }}</h2>
+        </div>
+
+        <div class="event-countdown mobile-event-countdown" aria-label="Odliczanie do wydarzenia">
+          <div class="countdown-grid">
+            <div>
+              <strong>{{ state.countdown.days }}</strong>
+              <span>dni</span>
+            </div>
+            <div>
+              <strong>{{ state.countdown.hours }}</strong>
+              <span>godz.</span>
+            </div>
+            <div>
+              <strong>{{ state.countdown.minutes }}</strong>
+              <span>min</span>
+            </div>
+            <div>
+              <strong>{{ state.countdown.seconds }}</strong>
+              <span>sek</span>
+            </div>
+          </div>
+        </div>
+
+        <a routerLink="/registration" class="primary-button mobile-event-button">Rejestracja</a>
+      } @else {
+        <div class="mobile-event-heading">
+          <p class="eyebrow">Najbliższy event</p>
+          <h2>Szczegóły wydarzenia wkrótce</h2>
+        </div>
+        <a routerLink="/registration" class="primary-button mobile-event-button">Rejestracja</a>
+      }
+    }
+  </section>
+
   <section class="intro-band" id="about">
     <div>
       <p class="eyebrow">Na miejscu</p>
-      <h2>Wszystko, czego trzeba do mocnej imprezy</h2>
+      <h2>Wszystko, czego trzeba do niezapomnianej imprezy</h2>
     </div>
     <p>
-      Silent disco, efekty świetlne, przekąski i strefy do grania tworzą
-      przestrzeń, w której możesz tańczyć, złapać oddech albo wejść w małą
-      rywalizację ze znajomymi.
+      Załóż słuchawki, wybierz swój kanał i tańcz przy ulubionej muzyce na silent disco.
+      Klimatyczne światła, starannie zaaranżowana przestrzeń, przekąski i strefy gier
+      sprawią, że każdy znajdzie tu coś dla siebie.
     </p>
   </section>
 
@@ -115,7 +138,7 @@
       <span class="feature-icon pi pi-trophy" aria-hidden="true"></span>
       <div>
         <h3>Strefa gier</h3>
-        <p>Miejsca, w których można zagrać w beer ponga, flip cupa i billarda.</p>
+        <p>Miejsca, w których można zagrać w beer ponga i flip cupa.</p>
       </div>
     </article>
     <article class="feature-card feature-card-redbull">

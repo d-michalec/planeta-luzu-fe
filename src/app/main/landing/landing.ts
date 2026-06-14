@@ -10,6 +10,7 @@ type HeroSlide = {
   image: string;
   alt: string;
   position: string;
+  hideOnMobile?: boolean;
 };
 
 type Countdown = {
@@ -33,6 +34,11 @@ type EventCountdownState = {
 export class Landing implements OnInit, OnDestroy {
   private eventApi = inject(EventApiService);
   private eventSubject = new BehaviorSubject<EventDto | null>(null);
+  private readonly mobileMediaQuery = window.matchMedia('(max-width: 860px)');
+  private readonly handleViewportChange = (event: MediaQueryListEvent) => {
+    this.isMobile = event.matches;
+    this.ensureActiveSlideVisible();
+  };
 
   readonly heroSlides: HeroSlide[] = [
     {
@@ -54,6 +60,7 @@ export class Landing implements OnInit, OnDestroy {
       image: 'landing/DSC00633.jpeg',
       alt: 'Klimat wydarzenia Planeta Luzu',
       position: 'center 26%',
+      hideOnMobile: true,
     },
     {
       image: 'landing/DSC00602.jpeg',
@@ -69,10 +76,12 @@ export class Landing implements OnInit, OnDestroy {
       image: 'landing/DSC08587.jpg',
       alt: 'Atmosfera Silent Disco Planeta Luzu',
       position: 'center 30%',
+      hideOnMobile: true,
     },
   ];
 
   activeSlideIndex = 0;
+  isMobile = this.mobileMediaQuery.matches;
 
   readonly eventCountdown$ = combineLatest([
     this.eventSubject,
@@ -87,11 +96,14 @@ export class Landing implements OnInit, OnDestroy {
   private readonly autoplayInterval = window.setInterval(() => this.nextSlide(), 5200);
 
   ngOnInit(): void {
+    this.mobileMediaQuery.addEventListener('change', this.handleViewportChange);
+    this.ensureActiveSlideVisible();
     this.loadEvent();
   }
 
   ngOnDestroy(): void {
     window.clearInterval(this.autoplayInterval);
+    this.mobileMediaQuery.removeEventListener('change', this.handleViewportChange);
     this.eventSubject.complete();
   }
 
@@ -107,16 +119,34 @@ export class Landing implements OnInit, OnDestroy {
   }
 
   previousSlide(): void {
-    this.activeSlideIndex =
-      (this.activeSlideIndex - 1 + this.heroSlides.length) % this.heroSlides.length;
+    this.activeSlideIndex = this.findVisibleSlide(-1);
   }
 
   nextSlide(): void {
-    this.activeSlideIndex = (this.activeSlideIndex + 1) % this.heroSlides.length;
+    this.activeSlideIndex = this.findVisibleSlide(1);
   }
 
   setSlide(index: number): void {
+    if (!this.isSlideVisible(index)) {
+      return;
+    }
+
     this.activeSlideIndex = index;
+  }
+
+  scrollToMobileEvent(): void {
+    const target = document.getElementById('mobile-event');
+
+    if (!target) {
+      return;
+    }
+
+    const top = target.getBoundingClientRect().top + window.scrollY - 82;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth',
+    });
   }
 
   private normalizeEvent(response: unknown): EventDto | null {
@@ -143,6 +173,30 @@ export class Landing implements OnInit, OnDestroy {
     }
 
     return null;
+  }
+
+  private findVisibleSlide(direction: 1 | -1): number {
+    let nextIndex = this.activeSlideIndex;
+
+    for (let attempts = 0; attempts < this.heroSlides.length; attempts++) {
+      nextIndex = (nextIndex + direction + this.heroSlides.length) % this.heroSlides.length;
+
+      if (this.isSlideVisible(nextIndex)) {
+        return nextIndex;
+      }
+    }
+
+    return this.activeSlideIndex;
+  }
+
+  private ensureActiveSlideVisible(): void {
+    if (!this.isSlideVisible(this.activeSlideIndex)) {
+      this.activeSlideIndex = this.findVisibleSlide(1);
+    }
+  }
+
+  private isSlideVisible(index: number): boolean {
+    return !this.isMobile || !this.heroSlides[index]?.hideOnMobile;
   }
 
   private createCountdown(event: EventDto | null): Countdown {

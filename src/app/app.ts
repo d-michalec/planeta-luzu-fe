@@ -9,5 +9,5 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('planeta-luzu-fe');
+  protected readonly title = signal('Planeta Luzu');
 }
