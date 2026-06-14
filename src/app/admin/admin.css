@@ -108,6 +108,23 @@
   background: #eef2ff;
 }
 
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  color: var(--text);
+  background: #f3f4f6;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
   .main-content {
@@ -144,6 +161,10 @@
 
   .navbar-links.open {
     display: flex;
+  }
+
+  .logout-button {
+    margin-left: auto;
   }
 
   .nav-link {

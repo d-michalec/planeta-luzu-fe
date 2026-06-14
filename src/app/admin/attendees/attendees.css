@@ -139,6 +139,14 @@
     font-size: 1.25rem;
   }
 
+  .page-header {
+    flex-direction: column;
+  }
+
+  .page-header button {
+    width: 100%;
+  }
+
   .page-header p {
     font-size: 0.875rem;
   }

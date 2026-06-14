@@ -16,4 +16,8 @@ export class AttendeesApiService {
   returnHeadphones(req: ReturnHeadphonesRequest) {
     return this.api.put('/auth/admin/return-headphones', req);
   }
+
+  deleteAll(): Observable<void> {
+    return this.api.delete<void>('/auth/admin/attendees');
+  }
 }

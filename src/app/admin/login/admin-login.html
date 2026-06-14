@@ -1,0 +1,50 @@
+<main class="admin-login-page">
+  <section class="login-panel">
+    <a class="brand" routerLink="/">
+      <span class="brand-icon">
+        <i class="pi pi-headphones"></i>
+      </span>
+      <span>Planeta Luzu</span>
+    </a>
+
+    <div class="heading">
+      <h1>Panel admina</h1>
+      <p>Zaloguj się, żeby zarządzać rejestracjami i słuchawkami.</p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="submit()">
+      <label for="adminEmail">E-mail</label>
+      <input
+        id="adminEmail"
+        pInputText
+        type="email"
+        name="email"
+        autocomplete="username"
+        [(ngModel)]="email"
+      />
+
+      <label for="adminPassword">Hasło</label>
+      <p-password
+        inputId="adminPassword"
+        name="password"
+        autocomplete="current-password"
+        [(ngModel)]="password"
+        [feedback]="false"
+        [toggleMask]="true"
+        styleClass="password-field"
+        inputStyleClass="password-input"
+      ></p-password>
+
+      <p class="error" *ngIf="error">{{ error }}</p>
+
+      <button
+        pButton
+        type="submit"
+        icon="pi pi-lock-open"
+        label="Zaloguj"
+        [loading]="isSubmitting"
+        [disabled]="!email.trim() || !password || isSubmitting"
+      ></button>
+    </form>
+  </section>
+</main>

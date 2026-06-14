@@ -28,6 +28,41 @@
   font-size: 0.95rem;
 }
 
+.admin-register-card {
+  display: grid;
+  gap: 0.875rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.admin-register-card h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.admin-register-card p {
+  margin: 0.25rem 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.admin-register-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.admin-register-form input,
+.admin-register-form button {
+  width: 100%;
+}
+
 .filters-card {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -45,6 +80,7 @@
   width: 100%;
 }
 
+.admin-register-form input,
 .filters-card input,
 :host ::ng-deep .filters-card .p-inputtext {
   background: #ffffff;
@@ -52,11 +88,13 @@
   border-color: #d1d5db;
 }
 
+.admin-register-form input::placeholder,
 .filters-card input::placeholder,
 :host ::ng-deep .filters-card .p-inputtext::placeholder {
   color: #9ca3af;
 }
 
+.admin-register-form input:focus,
 .filters-card input:focus,
 :host ::ng-deep .filters-card .p-inputtext:focus {
   background: #ffffff;
@@ -119,6 +157,14 @@
     font-size: 1.25rem;
   }
 
+  .page-header {
+    flex-direction: column;
+  }
+
+  .page-header button {
+    width: 100%;
+  }
+
   .page-header p {
     font-size: 0.875rem;
   }
@@ -127,6 +173,15 @@
     grid-template-columns: 1fr;
     padding: 0.875rem;
     border-radius: 12px;
+  }
+
+  .admin-register-card {
+    padding: 0.875rem;
+    border-radius: 12px;
+  }
+
+  .admin-register-form {
+    grid-template-columns: 1fr;
   }
 
   .desktop-table {

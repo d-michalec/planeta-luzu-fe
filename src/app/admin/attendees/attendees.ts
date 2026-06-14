@@ -7,9 +7,10 @@ import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { AttendeesApiService } from '../service/attendees.api.service';
 
 import { DialogService } from 'primeng/dynamicdialog';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ReturnHeadphonesDialog } from './return-headphones-dialog/return-headphones-dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { resolveApiErrorMessage } from '../../shared/services/api/api-error.util';
 
 @Component({
   selector: 'app-attendees',
@@ -30,11 +31,13 @@ import { InputTextModule } from 'primeng/inputtext';
 export class Attendees implements OnInit {
   private api = inject(AttendeesApiService);
   private dialog = inject(DialogService);
+  private messages = inject(MessageService);
 
   attendees = signal<AttendeesDto[]>([]);
   filtered = signal<AttendeesDto[]>([]);
   selectedItem?: AttendeesDto;
   error: string | null = null;
+  isDeletingAll = signal(false);
 
   filters = signal<AttendeesFilter>({
     firstName: '',
@@ -58,7 +61,7 @@ export class Attendees implements OnInit {
       },
       error: err => {
         console.error('GET ATTENDEES ERROR:', err);
-        this.error = 'Nie udało się pobrać uczestników.';
+        this.showError(err, 'Nie udało się pobrać uczestników.');
       }
     });
   }
@@ -111,6 +114,7 @@ export class Attendees implements OnInit {
 
     if (this.selectedItem.headphonesId == null) {
       this.error = 'Ten uczestnik nie ma przypisanych słuchawek.';
+      this.messages.add({ severity: 'warn', summary: 'Brak słuchawek', detail: this.error });
       return;
     }
 
@@ -132,13 +136,36 @@ export class Attendees implements OnInit {
       this.api.returnHeadphones(result).subscribe({
         next: () => {
           this.error = null;
+          this.messages.add({ severity: 'success', summary: 'Zwrot zapisany', detail: 'Zwrot słuchawek został zapisany.' });
           this.loadAttendees();
         },
         error: err => {
           console.error('RETURN HEADPHONES ERROR:', err);
-          this.error = 'Nie udało się zwrócić słuchawek.';
+          this.showError(err, 'Nie udało się zwrócić słuchawek.');
         }
       });
+    });
+  }
+
+  deleteAll() {
+    if (this.isDeletingAll()) return;
+
+    const confirmed = window.confirm('Usunąć wszystkie wpisy zwrotu/przypisania słuchawek? Bilety zostaną cofnięte do stanu opłaconego.');
+    if (!confirmed) return;
+
+    this.isDeletingAll.set(true);
+    this.api.deleteAll().subscribe({
+      next: () => {
+        this.error = null;
+        this.messages.add({ severity: 'success', summary: 'Usunięto', detail: 'Wszystkie przypisania słuchawek zostały usunięte.' });
+        this.loadAttendees();
+      },
+      error: err => {
+        this.isDeletingAll.set(false);
+        console.error('DELETE ALL ATTENDEES ERROR:', err);
+        this.showError(err, 'Nie udało się usunąć przypisań słuchawek.');
+      },
+      complete: () => this.isDeletingAll.set(false),
     });
   }
 
@@ -162,5 +189,10 @@ export class Attendees implements OnInit {
     }));
 
     this.applyFilter();
+  }
+
+  private showError(error: unknown, fallback: string) {
+    this.error = resolveApiErrorMessage(error, fallback);
+    this.messages.add({ severity: 'error', summary: 'Błąd', detail: this.error });
   }
 }

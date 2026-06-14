@@ -14,8 +14,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageService } from 'primeng/api';
 
 import { AssignHeadphonesApiService } from '../service/assign-headphones.api.service';
+import { resolveApiErrorMessage } from '../../shared/services/api/api-error.util';
 
 type AssignMode = 'camera' | 'manual';
 
@@ -35,6 +37,7 @@ export class AssignHeadphones implements AfterViewInit, OnDestroy {
   private api = inject(AssignHeadphonesApiService);
   private zone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
+  private messages = inject(MessageService);
 
   @ViewChild('video')
   videoRef?: ElementRef<HTMLVideoElement>;
@@ -143,6 +146,7 @@ export class AssignHeadphones implements AfterViewInit, OnDestroy {
     } catch (e: any) {
       this.zone.run(() => {
         this.error = this.getCameraErrorMessage(e);
+        this.messages.add({ severity: 'error', summary: 'Kamera', detail: this.error });
         this.isActive = false;
         this.isStartingCamera = false;
         this.cameraNeedsInteraction = true;
@@ -184,12 +188,13 @@ export class AssignHeadphones implements AfterViewInit, OnDestroy {
       .subscribe({
         next: () => {
           this.success = 'Słuchawki zostały przypisane.';
+          this.messages.add({ severity: 'success', summary: 'Przypisano', detail: this.success });
           this.isAssigning = false;
           this.restartScanner();
         },
         error: err => {
           console.error(err);
-          this.error = 'Nie udało się przypisać słuchawek.';
+          this.showError(err, 'Nie udało się przypisać słuchawek.');
           this.isAssigning = false;
         }
       });
@@ -209,12 +214,13 @@ export class AssignHeadphones implements AfterViewInit, OnDestroy {
     }).subscribe({
       next: () => {
         this.success = 'Słuchawki zostały przypisane ręcznie.';
+        this.messages.add({ severity: 'success', summary: 'Przypisano', detail: this.success });
         this.isAssigning = false;
         this.resetManualForm();
       },
       error: err => {
         console.error(err);
-        this.error = 'Nie udało się przypisać słuchawek ręcznie.';
+        this.showError(err, 'Nie udało się przypisać słuchawek ręcznie.');
         this.isAssigning = false;
       }
     });
@@ -241,6 +247,11 @@ export class AssignHeadphones implements AfterViewInit, OnDestroy {
   private clearMessages() {
     this.error = null;
     this.success = null;
+  }
+
+  private showError(error: unknown, fallback: string) {
+    this.error = resolveApiErrorMessage(error, fallback);
+    this.messages.add({ severity: 'error', summary: 'Błąd', detail: this.error });
   }
 
   private prepareVideoElement(video: HTMLVideoElement) {

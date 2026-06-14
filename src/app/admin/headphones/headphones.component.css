@@ -32,6 +32,10 @@
   flex-shrink: 0;
 }
 
+.delete-all-button {
+  flex-shrink: 0;
+}
+
 .desktop-table {
   display: block;
   background: white;
@@ -110,6 +114,10 @@
   }
 
   .create-button {
+    width: 100%;
+  }
+
+  .delete-all-button {
     width: 100%;
   }
 

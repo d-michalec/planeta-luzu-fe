@@ -1,0 +1,86 @@
+<section class="event-page">
+  <div class="page-header">
+    <div>
+      <h1>Event</h1>
+      <p>Ustaw nazwę i datę wydarzenia widoczne na stronie głównej.</p>
+    </div>
+
+    <button
+      pButton
+      type="button"
+      icon="pi pi-trash"
+      label="Usuń wszystkie dane"
+      severity="danger"
+      [loading]="isDeletingAllData"
+      [disabled]="isDeletingAllData"
+      (click)="deleteAllData()"
+    ></button>
+  </div>
+
+  <ng-container *ngIf="eventState$ | async as state">
+    <div class="event-loading" *ngIf="state.status === 'loading'">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Ładowanie eventu...</span>
+    </div>
+
+    <article class="event-panel" *ngIf="state.status === 'ready' && state.event">
+      <div>
+        <span class="label">Aktualny event</span>
+        <h2>{{ state.event.name }}</h2>
+        <p>{{ state.event.date | date:'dd.MM.yyyy, HH:mm' }}</p>
+        <p class="event-price">{{ state.event.price | number:'1.2-2' }} zl</p>
+      </div>
+
+      <button
+        pButton
+        type="button"
+        icon="pi pi-trash"
+        label="Usuń event"
+        severity="danger"
+        [loading]="isDeleting"
+        [disabled]="isDeleting"
+        (click)="deleteEvent(state.event)"
+      ></button>
+    </article>
+
+    <div class="event-error" *ngIf="state.status === 'error' && state.message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ state.message }}</span>
+      <button pButton type="button" label="Spróbuj ponownie" class="p-button-secondary" (click)="reloadEvent()"></button>
+    </div>
+
+    <form
+      class="event-form"
+      *ngIf="state.status !== 'loading' && !state.event"
+      [formGroup]="form"
+      (ngSubmit)="createEvent()"
+    >
+      <label>
+        <span>Nazwa eventu</span>
+        <input pInputText type="text" formControlName="name" placeholder="Silent Disco Planeta Luzu" />
+        <small *ngIf="hasError('name')">Podaj nazwę eventu.</small>
+      </label>
+
+      <label>
+        <span>Data i godzina</span>
+        <input pInputText type="datetime-local" formControlName="date" />
+        <small *ngIf="hasError('date')">Podaj datę i godzinę eventu.</small>
+      </label>
+
+      <label>
+        <span>Cena rezerwacji</span>
+        <input pInputText type="number" min="0.01" step="0.01" formControlName="price" placeholder="150.00" />
+        <small *ngIf="hasError('price')">Podaj cene wieksza od 0.</small>
+      </label>
+
+      <button
+        pButton
+        type="submit"
+        icon="pi pi-calendar-plus"
+        label="Utwórz event"
+        [loading]="isSaving"
+        [disabled]="isSaving || form.invalid"
+      ></button>
+    </form>
+  </ng-container>
+</section>

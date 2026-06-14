@@ -18,6 +18,12 @@ export interface RegisteredUsersViewModel {
   expiresAt: Date;
 }
 
+export type AdminRegisterRequest = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
 export type Filters = {
   firstName: string;
   lastName: string;

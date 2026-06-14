@@ -7,6 +7,44 @@
     </div>
   </div>
 
+  <div class="admin-register-card">
+    <div>
+      <h2>Dodaj uczestnika</h2>
+      <p>Admin moze dodac rezerwacje rowniez po zamknieciu formularza publicznego.</p>
+    </div>
+
+    <div class="admin-register-form">
+      <input
+        pInputText
+        placeholder="First name"
+        [value]="newRegistration().firstName"
+        (input)="onNewRegistrationChange('firstName', $any($event.target).value)"
+      />
+
+      <input
+        pInputText
+        placeholder="Last name"
+        [value]="newRegistration().lastName"
+        (input)="onNewRegistrationChange('lastName', $any($event.target).value)"
+      />
+
+      <input
+        pInputText
+        placeholder="Email"
+        [value]="newRegistration().email"
+        (input)="onNewRegistrationChange('email', $any($event.target).value)"
+      />
+
+      <button
+        pButton
+        label="Dodaj"
+        icon="pi pi-user-plus"
+        [disabled]="isRegistering()"
+        (click)="registerUser()"
+      ></button>
+    </div>
+  </div>
+
   <!-- FILTERS -->
   <div class="filters-card">
 

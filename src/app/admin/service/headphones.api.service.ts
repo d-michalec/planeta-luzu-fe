@@ -24,4 +24,8 @@ export class HeadphonesApiService {
   deleteHeadphones(headphonesId: number): Observable<void> {
     return this.api.delete<void>(`/auth/admin/headphones/${headphonesId}`);
   }
+
+  deleteAll(): Observable<void> {
+    return this.api.delete<void>('/auth/admin/headphones');
+  }
 }

@@ -4,12 +4,13 @@ import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { HeadphonesApiService } from '../service/headphones.api.service';
 import { HeadphonesDto } from '../shared/model/headphones.model';
 import { HeadphonesDialog } from './headphones-dialog/headphones-dialog';
+import { resolveApiErrorMessage } from '../../shared/services/api/api-error.util';
 
 @Component({
   selector: 'app-headphones',
@@ -30,9 +31,11 @@ export class Headphones {
 
   private api = inject(HeadphonesApiService);
   private dialog = inject(DialogService);
+  private messages = inject(MessageService);
 
   headphones = signal<HeadphonesDto[]>([]);
   refresh = signal(0);
+  isDeletingAll = signal(false);
 
   selectedItem: HeadphonesDto | null = null;
   ref: DynamicDialogRef | null = null;
@@ -49,7 +52,7 @@ export class Headphones {
         },
         error: err => {
           console.error('GET HEADPHONES ERROR:', err);
-          this.error = 'Nie udało się pobrać słuchawek.';
+          this.showError(err, 'Nie udało się pobrać słuchawek.');
         }
       });
     });
@@ -94,18 +97,24 @@ export class Headphones {
 
       if (result.mode === 'edit') {
         this.api.updateHeadphones(result.form).subscribe({
-          next: () => this.refresh.update(v => v + 1),
+          next: () => {
+            this.messages.add({ severity: 'success', summary: 'Zapisano', detail: 'Słuchawki zostały zaktualizowane.' });
+            this.refresh.update(v => v + 1);
+          },
           error: err => {
             console.error('UPDATE HEADPHONES ERROR:', err);
-            this.error = 'Nie udało się zaktualizować słuchawek.';
+            this.showError(err, 'Nie udało się zaktualizować słuchawek.');
           }
         });
       } else {
         this.api.createHeadphones(result.form.headphonesId).subscribe({
-          next: () => this.refresh.update(v => v + 1),
+          next: () => {
+            this.messages.add({ severity: 'success', summary: 'Dodano', detail: 'Słuchawki zostały dodane.' });
+            this.refresh.update(v => v + 1);
+          },
           error: err => {
             console.error('CREATE HEADPHONES ERROR:', err);
-            this.error = 'Nie udało się dodać słuchawek.';
+            this.showError(err, 'Nie udało się dodać słuchawek.');
           }
         });
       }
@@ -116,11 +125,35 @@ export class Headphones {
     if (!this.selectedItem) return;
 
     this.api.deleteHeadphones(this.selectedItem.headphonesId).subscribe({
-      next: () => this.refresh.update(v => v + 1),
+      next: () => {
+        this.messages.add({ severity: 'success', summary: 'Usunięto', detail: 'Słuchawki zostały usunięte.' });
+        this.refresh.update(v => v + 1);
+      },
       error: err => {
         console.error('DELETE HEADPHONES ERROR:', err);
-        this.error = 'Nie udało się usunąć słuchawek.';
+        this.showError(err, 'Nie udało się usunąć słuchawek.');
       }
+    });
+  }
+
+  deleteAll() {
+    if (this.isDeletingAll()) return;
+
+    const confirmed = window.confirm('Usunąć wszystkie słuchawki? Ta akcja usunie też powiązane przypisania.');
+    if (!confirmed) return;
+
+    this.isDeletingAll.set(true);
+    this.api.deleteAll().subscribe({
+      next: () => {
+        this.messages.add({ severity: 'success', summary: 'Usunięto', detail: 'Wszystkie słuchawki zostały usunięte.' });
+        this.refresh.update(v => v + 1);
+      },
+      error: err => {
+        this.isDeletingAll.set(false);
+        console.error('DELETE ALL HEADPHONES ERROR:', err);
+        this.showError(err, 'Nie udało się usunąć słuchawek.');
+      },
+      complete: () => this.isDeletingAll.set(false),
     });
   }
 
@@ -131,5 +164,10 @@ export class Headphones {
 
   getStatusClass(status: string | null | undefined): string {
     return (status || 'unknown').toLowerCase();
+  }
+
+  private showError(error: unknown, fallback: string) {
+    this.error = resolveApiErrorMessage(error, fallback);
+    this.messages.add({ severity: 'error', summary: 'Błąd', detail: this.error });
   }
 }

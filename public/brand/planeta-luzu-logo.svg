@@ -1,0 +1,21 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Planeta Luzu Silent Disco</title>
+  <desc id="desc">Logo Planeta Luzu z planetą, orbitą i słuchawkami.</desc>
+  <rect width="180" height="180" rx="36" fill="#140014"/>
+  <circle cx="90" cy="90" r="54" fill="url(#planetGradient)"/>
+  <path d="M36 101C55 66 101 39 144 39C157 39 164 42 166 48C169 59 147 75 113 88C80 102 43 108 35 104C33 103 33 102 36 101Z" stroke="#FF6A00" stroke-width="8" stroke-linecap="round"/>
+  <path d="M35 101C48 118 84 125 119 116C146 109 164 97 164 88" stroke="#FF00C8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M54 89C54 62 70 45 90 45C110 45 126 62 126 89" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+  <rect x="42" y="84" width="25" height="44" rx="12.5" fill="#2A0D2D" stroke="#FFFFFF" stroke-width="7"/>
+  <rect x="113" y="84" width="25" height="44" rx="12.5" fill="#2A0D2D" stroke="#FFFFFF" stroke-width="7"/>
+  <path d="M73 126C83 134 98 136 109 128" stroke="#FF6A00" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="70" cy="73" r="6" fill="#FF00C8"/>
+  <circle cx="112" cy="64" r="5" fill="#FF6A00"/>
+  <defs>
+    <linearGradient id="planetGradient" x1="48" y1="48" x2="130" y2="134" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E1A66"/>
+      <stop offset="0.54" stop-color="#FF00C8"/>
+      <stop offset="1" stop-color="#FF6A00"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -6,7 +6,7 @@ export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const baseUrl = environment.apiUrl;
 
   if (/^https?:\/\//i.test(req.url)) {
-    return next(req);
+    return next(req.clone({ withCredentials: true }));
   }
 
   const normalizedBase = baseUrl.replace(/\/+$/, '');
@@ -14,6 +14,7 @@ export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
 
   const apiReq = req.clone({
     url: `${normalizedBase}/${normalizedUrl}`,
+    withCredentials: true,
   });
 
   return next(apiReq);

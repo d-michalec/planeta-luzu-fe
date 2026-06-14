@@ -1,0 +1,23 @@
+<nav class="topbar" aria-label="Nawigacja użytkownika">
+  <a class="brand" routerLink="/" aria-label="Planeta Luzu" (click)="closeMenu()">
+    <img src="brand/logo.png" alt="Planeta Luzu Silent Disco" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    [attr.aria-expanded]="isMenuOpen"
+    aria-label="Otwórz menu"
+    (click)="toggleMenu()"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="nav-links" [class.is-open]="isMenuOpen">
+    <a routerLink="/regulamin" (click)="closeMenu()">Regulamin</a>
+    <a routerLink="/polityka-prywatnosci" (click)="closeMenu()">Polityka prywatności</a>
+    <a routerLink="/registration" class="nav-cta" (click)="closeMenu()">Rejestracja</a>
+  </div>
+</nav>

@@ -1,0 +1,210 @@
+.registration-page {
+  min-height: 100vh;
+  color: #fff;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255, 0, 200, 0.26), transparent 28rem),
+    radial-gradient(circle at 8% 52%, rgba(255, 106, 0, 0.2), transparent 24rem),
+    linear-gradient(135deg, #140014 0%, #2a0d2d 48%, #5e1a66 100%);
+}
+
+.registration-layout {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.registration-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 84px);
+  padding: 44px 0 88px;
+}
+
+.registration-form {
+  display: grid;
+  gap: 18px;
+  width: min(100%, 520px);
+}
+
+.registration-window {
+  display: grid;
+  gap: 16px;
+  padding: 4px 0 8px;
+}
+
+.window-heading {
+  display: grid;
+  gap: 6px;
+}
+
+.window-heading span,
+.window-label,
+.countdown-grid span {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.window-heading strong {
+  color: #ff6a00;
+  font-size: clamp(2rem, 7vw, 3.6rem);
+  line-height: 0.95;
+  text-shadow: 0 14px 40px rgba(255, 106, 0, 0.26);
+}
+
+.window-heading.closed strong {
+  color: #ffb25d;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.countdown-grid div {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-height: 88px;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04)),
+    rgba(20, 0, 20, 0.34);
+}
+
+.countdown-grid strong {
+  color: #ff00c8;
+  font-size: clamp(2rem, 8vw, 3.35rem);
+  line-height: 1;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+}
+
+label span {
+  font-weight: 800;
+}
+
+input {
+  width: 100%;
+  min-height: 52px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  padding: 0 15px;
+  font: inherit;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+input:focus {
+  border-color: #ff00c8;
+  box-shadow: 0 0 0 3px rgba(255, 0, 200, 0.18);
+}
+
+small {
+  color: #ffb25d;
+  font-weight: 700;
+}
+
+button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 8px;
+  background: #ff00c8;
+  color: #140014;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  box-shadow: 0 16px 38px rgba(255, 0, 200, 0.28);
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.toast-message,
+.error-message {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+
+.toast-message {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  width: min(360px, calc(100% - 32px));
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.36);
+}
+
+.success-message {
+  background: #103a26;
+  border: 1px solid rgba(52, 211, 153, 0.7);
+  color: #eafff6;
+}
+
+.success-message::before {
+  content: "✓";
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+  border-radius: 999px;
+  background: #34d399;
+  color: #062216;
+  font-weight: 900;
+}
+
+.error-message {
+  background: #3a101b;
+  border: 1px solid rgba(248, 113, 113, 0.7);
+  color: #fff1f2;
+}
+
+.error-message::before {
+  content: "!";
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+  border-radius: 999px;
+  background: #f87171;
+  color: #2a0710;
+  font-weight: 900;
+}
+
+@media (max-width: 860px) {
+  .registration-layout {
+    min-height: auto;
+    padding: 48px 0 72px;
+  }
+
+  .toast-message {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .countdown-grid {
+    gap: 8px;
+  }
+
+  .countdown-grid div {
+    min-height: 74px;
+  }
+}

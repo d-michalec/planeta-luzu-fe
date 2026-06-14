@@ -1,1 +1,154 @@
-<p>landing works!</p>
+﻿<main class="landing-page">
+  <app-main-navbar />
+
+  <section class="hero" aria-label="Planeta Luzu Silent Disco">
+    <div class="hero-carousel" aria-live="polite">
+      @for (slide of heroSlides; track slide.image; let index = $index) {
+        <img
+          [src]="slide.image"
+          [alt]="slide.alt"
+          [class.is-active]="index === activeSlideIndex"
+          [style.object-position]="slide.position"
+        />
+      }
+    </div>
+
+    <div class="hero-shade"></div>
+
+    <div class="hero-content">
+      <div class="hero-copy">
+        <p class="eyebrow">Silent Disco Planeta Luzu</p>
+        <h1>Planeta Luzu</h1>
+        @if (eventCountdown$ | async; as state) {
+          @if (state.event) {
+            <div class="event-countdown" aria-label="Odliczanie do wydarzenia">
+              <div class="event-name">
+                <span>Najbliższy event</span>
+                <strong>{{ state.event.name }}</strong>
+              </div>
+
+              <div class="countdown-grid">
+                <div>
+                  <strong>{{ state.countdown.days }}</strong>
+                  <span>dni</span>
+                </div>
+                <div>
+                  <strong>{{ state.countdown.hours }}</strong>
+                  <span>godz.</span>
+                </div>
+                <div>
+                  <strong>{{ state.countdown.minutes }}</strong>
+                  <span>min</span>
+                </div>
+                <div>
+                  <strong>{{ state.countdown.seconds }}</strong>
+                  <span>sek</span>
+                </div>
+              </div>
+            </div>
+          }
+        }
+        <div class="hero-actions">
+          <a routerLink="/registration" class="primary-button">Rejestracja</a>
+        </div>
+      </div>
+
+      <div class="carousel-controls" aria-label="Sterowanie karuzelą">
+        <button type="button" class="arrow-button" aria-label="Poprzednie zdjęcie" (click)="previousSlide()">
+          <span class="pi pi-chevron-left" aria-hidden="true"></span>
+        </button>
+
+        <div class="slide-dots" aria-label="Wybierz zdjęcie">
+          @for (slide of heroSlides; track slide.image; let index = $index) {
+            <button
+              type="button"
+              [class.is-active]="index === activeSlideIndex"
+              [attr.aria-label]="'Pokaż zdjęcie ' + (index + 1)"
+              [attr.aria-current]="index === activeSlideIndex ? 'true' : null"
+              (click)="setSlide(index)"
+            ></button>
+          }
+        </div>
+
+        <button type="button" class="arrow-button" aria-label="Następne zdjęcie" (click)="nextSlide()">
+          <span class="pi pi-chevron-right" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro-band" id="about">
+    <div>
+      <p class="eyebrow">Na miejscu</p>
+      <h2>Wszystko, czego trzeba do mocnej imprezy</h2>
+    </div>
+    <p>
+      Silent disco, efekty świetlne, przekąski i strefy do grania tworzą
+      przestrzeń, w której możesz tańczyć, złapać oddech albo wejść w małą
+      rywalizację ze znajomymi.
+    </p>
+  </section>
+
+  <section class="feature-grid" id="program" aria-label="Atrakcje wydarzenia">
+    <article class="feature-card feature-card-wide">
+      <span class="feature-icon pi pi-headphones" aria-hidden="true"></span>
+      <div>
+        <h3>Profesjonalne słuchawki</h3>
+        <p>Bezprzewodowe, nauszne słuchawki z trzema kanałami muzycznymi.</p>
+      </div>
+    </article>
+    <article class="feature-card">
+      <span class="feature-icon pi pi-sparkles" aria-hidden="true"></span>
+      <div>
+        <h3>Efekty wizualne</h3>
+        <p>Wyjątkowa przestrzeń, profesjonalne oświetlenie i efekty wizualne tworzące niezapomniany klimat.</p>
+      </div>
+    </article>
+    <article class="feature-card">
+      <span class="feature-icon pi pi-th-large" aria-hidden="true"></span>
+      <div>
+        <h3>Finger foody</h3>
+        <p>Pyszne przekąski na jeden kęs.</p>
+      </div>
+    </article>
+    <article class="feature-card">
+      <span class="feature-icon pi pi-trophy" aria-hidden="true"></span>
+      <div>
+        <h3>Strefa gier</h3>
+        <p>Miejsca, w których można zagrać w beer ponga, flip cupa i billarda.</p>
+      </div>
+    </article>
+    <article class="feature-card feature-card-redbull">
+      <span class="feature-icon pi pi-bolt" aria-hidden="true"></span>
+      <div>
+        <h3>Strefa Red Bull</h3>
+        <p>Bezpłatne energetyki dla każdego.</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="gallery-section" id="gallery">
+    <div class="section-heading">
+      <p class="eyebrow">Galeria</p>
+      <h2>Zobacz klimat Planety Luzu</h2>
+    </div>
+
+    <div class="photo-grid">
+      <img src="landing/DSC00512.jpeg" alt="Uczestnicy wydarzenia Planeta Luzu" />
+      <img src="landing/DSC00519.jpeg" alt="Goście podczas Silent Disco" />
+      <img src="landing/DSC00602.jpeg" alt="Parkiet Silent Disco Planeta Luzu" />
+      <img src="landing/DSC00633.jpeg" alt="Klimat wydarzenia Planeta Luzu" />
+      <img src="landing/DSC08457.jpg" alt="Publiczność na imprezie Planeta Luzu" />
+      <img src="landing/DSC08463.jpg" alt="Światła i parkiet Silent Disco" />
+      <img src="landing/DSC08486.jpg" alt="Uczestnicy imprezy Planeta Luzu" />
+      <img src="landing/DSC08587.jpg" alt="Atmosfera Silent Disco Planeta Luzu" />
+      <img src="gallery/20231231221845_IMG_6919.jpg" alt="Noworoczny klimat Planety Luzu" />
+      <img src="gallery/DSC08469.jpg" alt="Goście Planety Luzu" />
+      <img src="gallery/DSC08479.jpg" alt="Zabawa podczas Silent Disco" />
+      <img src="gallery/DSC08495.jpg" alt="Wieczór w Planecie Luzu" />
+      <img src="gallery/DSC08538.jpg" alt="Imprezowa atmosfera Planety Luzu" />
+      <img src="gallery/DSC08573.jpg" alt="Uczestnicy na parkiecie" />
+      <img src="gallery/DSC08574.jpg" alt="Silent Disco w Planecie Luzu" />
+    </div>
+  </section>
+</main>
